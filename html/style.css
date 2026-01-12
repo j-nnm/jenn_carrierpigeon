@@ -1,0 +1,203 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Times New Roman', Georgia, serif;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #2c1810;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+
+.paper {
+    background: linear-gradient(135deg, #f5e6c8 0%, #e8d4a8 50%, #d4c4a0 100%);
+    border: 3px solid #8b7355;
+    border-radius: 3px;
+    padding: 30px;
+    width: 380px;
+    box-shadow: 
+        0 4px 8px rgba(0,0,0,0.3),
+        inset 0 0 30px rgba(139,115,85,0.1);
+    position: relative;
+}
+
+.paper::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 1px solid rgba(139,115,85,0.3);
+    pointer-events: none;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #8b7355;
+}
+
+.header h2 {
+    font-size: 1.4em;
+    font-weight: normal;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #2c1810;
+}
+
+.feather {
+    font-size: 1.5em;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    font-size: 0.95em;
+    color: #4a3728;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 2px solid #8b7355;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.6);
+    font-family: 'Times New Roman', Georgia, serif;
+    font-size: 1em;
+    color: #2c1810;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #5a4535;
+    background: rgba(255,255,255,0.8);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #8b7355;
+    font-style: italic;
+}
+
+.form-group textarea {
+    height: 100px;
+    resize: none;
+    line-height: 1.5;
+}
+
+.char-count {
+    text-align: right;
+    font-size: 0.85em;
+    color: #6b5344;
+    margin-top: 5px;
+}
+
+.buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: 2px solid #5a4535;
+    border-radius: 2px;
+    font-family: 'Times New Roman', Georgia, serif;
+    font-size: 1em;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-send {
+    background: #5a4535;
+    color: #f5e6c8;
+}
+
+.btn-send:hover {
+    background: #4a3728;
+}
+
+.btn-cancel,
+.btn-close {
+    background: transparent;
+    color: #5a4535;
+}
+
+.btn-cancel:hover,
+.btn-close:hover {
+    background: rgba(90,69,53,0.1);
+}
+
+/* Received message styling */
+.paper.received {
+    background: linear-gradient(135deg, #faf3e3 0%, #f0e4cc 50%, #e6dac4 100%);
+}
+
+.sender {
+    font-style: italic;
+    color: #6b5344;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #8b7355;
+}
+
+.sender span {
+    font-weight: bold;
+    color: #2c1810;
+}
+
+.message-content {
+    background: rgba(255,255,255,0.4);
+    border: 1px solid #8b7355;
+    border-radius: 2px;
+    padding: 15px;
+    min-height: 80px;
+    line-height: 1.6;
+    font-size: 1.05em;
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Input number spinner hide */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
