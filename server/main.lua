@@ -79,8 +79,8 @@ RegisterNetEvent('carrier_pigeon:sendMessage', function(targetId, message)
         -- Check if target is still online
         local target = VORPcore.getUser(targetId)
         if target then
-            -- Deliver the message
-            TriggerClientEvent('carrier_pigeon:receiveMessage', targetId, senderName, message)
+            -- Deliver the message (include sender's server ID for replies)
+            TriggerClientEvent('carrier_pigeon:receiveMessage', targetId, senderName, message, src)
         end
         -- Note: Even if target logged off during flight, letter is still consumed
         -- This is a design choice - you could refund the letter here if preferred
@@ -104,4 +104,38 @@ end)
 AddEventHandler('playerDropped', function(reason)
     local src = source
     pigeonsInFlight[src] = nil
+end)
+
+-- Check if player has items for replying
+RegisterNetEvent('carrier_pigeon:checkItemsForReply', function(targetId)
+    local src = source
+    
+    -- Check items
+    local letterCount = VORPInv.getItemCount(src, Config.LetterItem)
+    local pigeonCount = VORPInv.getItemCount(src, Config.PigeonItem)
+    
+    if letterCount < 1 then
+        TriggerClientEvent('carrier_pigeon:noLetter', src)
+        return
+    end
+    
+    if pigeonCount < 1 then
+        TriggerClientEvent('carrier_pigeon:noPigeon', src)
+        return
+    end
+    
+    -- Check if pigeon is in flight
+    if pigeonsInFlight[src] then
+        return
+    end
+    
+    -- Check if target is still online
+    local targetPlayer = VORPcore.getUser(targetId)
+    if not targetPlayer then
+        TriggerClientEvent('carrier_pigeon:deliveryFailed', src)
+        return
+    end
+    
+    -- All good, open the reply UI
+    TriggerClientEvent('carrier_pigeon:openReplyUI', src, targetId)
 end)

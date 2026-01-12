@@ -6,8 +6,10 @@ const charCurrent = document.getElementById('char-current');
 const charMax = document.getElementById('char-max');
 const senderNameSpan = document.getElementById('sender-name');
 const messageContent = document.getElementById('message-content');
+const replyBtn = document.getElementById('btn-reply');
 
 let maxLength = 140;
+let canReply = false;
 
 // Listen for messages from the client
 window.addEventListener('message', function(event) {
@@ -20,24 +22,42 @@ window.addEventListener('message', function(event) {
             messageInput.maxLength = maxLength;
             openSendUI();
             break;
+        
+        case 'openReply':
+            maxLength = data.maxLength || 140;
+            charMax.textContent = maxLength;
+            messageInput.maxLength = maxLength;
+            openSendUI(data.targetId);
+            break;
             
         case 'close':
             closeAllUI();
             break;
             
         case 'showMessage':
+            canReply = data.canReply || false;
             showReceivedMessage(data.senderName, data.message);
             break;
     }
 });
 
-function openSendUI() {
+function openSendUI(prefillTargetId) {
     closeAllUI();
     sendContainer.classList.remove('hidden');
-    targetIdInput.value = '';
+    targetIdInput.value = prefillTargetId || '';
     messageInput.value = '';
     charCurrent.textContent = '0';
-    targetIdInput.focus();
+    
+    // If target is pre-filled (reply), focus on message. Otherwise focus on target ID.
+    if (prefillTargetId) {
+        targetIdInput.readOnly = true;
+        targetIdInput.classList.add('readonly');
+        messageInput.focus();
+    } else {
+        targetIdInput.readOnly = false;
+        targetIdInput.classList.remove('readonly');
+        targetIdInput.focus();
+    }
 }
 
 function closeAllUI() {
@@ -49,6 +69,14 @@ function showReceivedMessage(sender, message) {
     closeAllUI();
     senderNameSpan.textContent = sender;
     messageContent.textContent = message;
+    
+    // Show/hide reply button based on whether we can reply
+    if (canReply) {
+        replyBtn.classList.remove('hidden');
+    } else {
+        replyBtn.classList.add('hidden');
+    }
+    
     receiveContainer.classList.remove('hidden');
 }
 
@@ -92,6 +120,17 @@ document.getElementById('btn-cancel').addEventListener('click', function() {
 // Close button (received message)
 document.getElementById('btn-close').addEventListener('click', function() {
     fetch('https://carrier_pigeon/closeMessage', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+    });
+});
+
+// Reply button
+document.getElementById('btn-reply').addEventListener('click', function() {
+    fetch('https://carrier_pigeon/replyMessage', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

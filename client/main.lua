@@ -1,6 +1,7 @@
 local VORPcore = exports.vorp_core:GetCore()
 local isNuiOpen = false
 local pigeonInFlight = false
+local lastSenderId = nil  -- Store the last sender's ID for replies
 
 -- Register the letter item as usable (opens the send UI)
 -- Note: This is triggered from server-side item registration
@@ -105,7 +106,10 @@ RegisterNetEvent('carrier_pigeon:deliveryFailed', function()
 end)
 
 -- Event: Receive a message
-RegisterNetEvent('carrier_pigeon:receiveMessage', function(senderName, message)
+RegisterNetEvent('carrier_pigeon:receiveMessage', function(senderName, message, senderId)
+    -- Store sender ID for potential reply
+    lastSenderId = senderId
+    
     -- Notification that message arrived
     VORPcore.NotifyRightTip(Config.Notifications.messageReceived, 4000)
     
@@ -117,14 +121,49 @@ RegisterNetEvent('carrier_pigeon:receiveMessage', function(senderName, message)
     SendNUIMessage({
         action = 'showMessage',
         senderName = senderName,
-        message = message
+        message = message,
+        canReply = (senderId ~= nil)  -- Can only reply if we have sender ID
     })
     isNuiOpen = true
 end)
 
 RegisterNUICallback('closeMessage', function(data, cb)
     CloseMessageUI()
+    lastSenderId = nil
     cb('ok')
+end)
+
+-- Reply to a message
+RegisterNUICallback('replyMessage', function(data, cb)
+    CloseMessageUI()
+    
+    if not lastSenderId then
+        cb('ok')
+        return
+    end
+    
+    if pigeonInFlight then
+        VORPcore.NotifyRightTip(Config.Notifications.pigeonBusy, 4000)
+        lastSenderId = nil
+        cb('ok')
+        return
+    end
+    
+    -- Check items before opening UI
+    TriggerServerEvent('carrier_pigeon:checkItemsForReply', lastSenderId)
+    cb('ok')
+end)
+
+-- Server confirmed we have items, open reply UI
+RegisterNetEvent('carrier_pigeon:openReplyUI', function(targetId)
+    isNuiOpen = true
+    SetNuiFocus(true, true)
+    SendNUIMessage({
+        action = 'openReply',
+        maxLength = Config.MaxMessageLength,
+        targetId = targetId
+    })
+    lastSenderId = nil
 end)
 
 -- Event: No items

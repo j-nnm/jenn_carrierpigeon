@@ -201,3 +201,15 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
     -moz-appearance: textfield;
 }
+
+/* Readonly input styling (for replies) */
+.form-group input.readonly {
+    background: rgba(200,180,150,0.5);
+    color: #6b5344;
+    cursor: not-allowed;
+}
+
+/* Hidden utility class */
+.btn.hidden {
+    display: none;
+}
