@@ -37,6 +37,7 @@ Config.MaxMessageLength = 140          -- Character limit
 - vorp_core
 - vorp_inventory
 
+## Notes
 
 - The letter is consumed on send (even if recipient logs off during delivery)
 - The pigeon is temporarily removed and returns after delivery + return time
