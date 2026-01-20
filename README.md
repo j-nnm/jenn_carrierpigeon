@@ -1,4 +1,4 @@
-# Carrier Pigeon Messaging
+# [WIP] Carrier Pigeon Messaging
 
 A period-appropriate messaging system for RedM using VORP framework. Send short messages to other players via carrier pigeon!
 
@@ -10,22 +10,6 @@ A period-appropriate messaging system for RedM using VORP framework. Send short 
 - **Offline protection** - If recipient is offline, pigeon returns and items aren't consumed
 - **Anti-spam** - Can't send another message while your pigeon is in flight
 - **Clean NUI** - Period-styled paper/letter UI
-
-## Installation
-
-1. **Add the items to your database**
-   - Run the SQL in `items.sql` against your database
-   - Adjust item limits as needed
-
-2. **Add the resource**
-   - Place the `carrier_pigeon` folder in your resources directory
-   - Add `ensure carrier_pigeon` to your server.cfg (after vorp_core and vorp_inventory)
-
-3. **Set up shops (optional)**
-   - Add letters and carrier pigeons to a general store or dedicated shop
-   - Suggested prices:
-     - Letters: $0.10 - $0.50 each (cheap, consumable)
-     - Carrier Pigeon: $5.00 - $20.00 (one-time purchase, reusable)
 
 ## Usage
 
@@ -53,7 +37,6 @@ Config.MaxMessageLength = 140          -- Character limit
 - vorp_core
 - vorp_inventory
 
-## Notes
 
 - The letter is consumed on send (even if recipient logs off during delivery)
 - The pigeon is temporarily removed and returns after delivery + return time
